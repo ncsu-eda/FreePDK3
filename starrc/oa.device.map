@@ -1,0 +1,4 @@
+nmos NCSU_TechLib_FreePDK3 nmos symbol D G S PROPMAP
+pmos NCSU_TechLib_FreePDK3 pmos symbol D G S PROPMAP
+pres analogLib presistor symbol PLUS MINUS
+pcap analogLib pcapacitor symbol PLUS MINUS

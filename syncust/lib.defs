@@ -1,0 +1,2 @@
+INCLUDE $SYNOPSYS_CUSTOM_INSTALL/samples/lib.defs
+DEFINE NCSU_TechLib_FreePDK3 ./NCSU_TechLib_FreePDK3

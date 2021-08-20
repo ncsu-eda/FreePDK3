@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--Created by Custom Compiler (TM), build , on Tue Jul  6 17:25:21 2021-->
+<file-format name="stateData" version="1.0">
+ <attribute name="description" type="giString" value=""/>
+ <attribute name="design" type="dmCellView" value="FreePDK3_examples/inverter_testbench/schematic"/>
+ <attribute name="enabled" type="giBoolean" value="1"/>
+ <attribute name="name" type="giString" value="HSPICE_default"/>
+ <attribute name="openaccessState" type="dmCellView" value="FreePDK3_examples/inverter_testbench/HSPICE_default"/>
+ <attribute name="simulator" type="giString" value="HSPICE"/>
+ <comment></comment>
+ <resultsDir>./simulation</resultsDir>
+ <integration version="1"/>
+</file-format>

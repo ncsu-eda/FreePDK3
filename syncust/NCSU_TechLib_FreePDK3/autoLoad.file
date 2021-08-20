@@ -1,0 +1,75 @@
+#########################################################################
+# 3nm FreePDK(TM) Custom Compiler autoLoad script
+#
+# Copyright (c) 2021, North Carolina State University
+# All Rights Reserved.
+#
+# Please see the file LICENSE included with this distribution for license.
+# You may not use these files except in compliance with the License.
+#########################################################################
+
+set DEVICELIB_NAME "NCSU_TechLib_FreePDK3"
+set DEVICELIB_PATH [file dirname [file normalize [info script]]]
+set toolChk_FreePDK3 "CustomCompiler"
+set pName "tool_console"
+catch { set pName [db::getAttr name -of [db::getProcessInfo]] }
+
+puts "Loading: Callback files..."
+#Loading Tcl callback files 
+foreach i [lsort [glob -nocomplain ${DEVICELIB_PATH}/../scripts/callbacks/*.tcl ${DEVICELIB_PATH}/../scripts/callbacks/*.tbc]] {
+    if {[catch {source $i} err]} {
+        puts "Error-Loading: $i\n    $err"
+        #puts "Error: $i $err"
+    } else {
+        set fileName [regsub "${DEVICELIB_PATH}\/..\/" $i ""]
+        puts "Loading: $fileName"
+    }
+}
+
+if {[info exists ::env(iPDK_load_display_${DEVICELIB_NAME})]} {
+    if {$env(iPDK_load_display_${DEVICELIB_NAME}) == 1} {
+        puts "\n\[INFO\] : Loading display.drf from ${DEVICELIB_PATH}\n\n if you wish to Load other display.drf, please set shell environment valiable \"iPDK_load_display_${DEVICELIB_NAME}\" to value = 0"
+        dr::loadDisplayResources -filePath ${DEVICELIB_PATH}/display.drf -format drf
+
+    } elseif {$env(iPDK_load_display_${DEVICELIB_NAME}) == 0} {
+        puts "\n\[INFO\] : Not loading display.drf as shell environment variable iPDK_load_display_${DEVICELIB_NAME} is set to value = 0"
+    } else {
+        puts "\n\[INFO\] : $env(iPDK_load_display_${DEVICELIB_NAME}) is not a valid value for the environment variable iPDK_load_display_${DEVICELIB_NAME}. Accepted values are 0,1\n\nLoading display.drf from ${DEVICELIB_PATH}\n if you wish to Load other display.drf, please set shell environment valiable \"iPDK_load_display_${DEVICELIB_NAME}\" to value = 0"
+        dr::loadDisplayResources -filePath ${DEVICELIB_PATH}/display.drf -format drf
+    }
+} else {
+    puts "\n\[INFO\] : Loading display.drf from ${DEVICELIB_PATH}\n\n if you wish to Load other display.drf, please set shell environment valiable \"iPDK_load_display_${DEVICELIB_NAME}\" to value = 0"
+    dr::loadDisplayResources -filePath ${DEVICELIB_PATH}/display.drf -format drf
+}
+
+if {!("sae_shell"==$pName || "nti_shell"==$pName)} {
+    # Set preference to use ICV DRC
+    db::setPrefValue xtDRCTool          -value "IC Validator"
+    db::setPrefValue xtDRCICVRunsetFile -value "${DEVICELIB_PATH}/../../icv/FreePDK3_main.drc.rs"
+    db::setPrefValue xtDRCICVIncludePaths -value "${DEVICELIB_PATH}/../../icv"
+    db::setPrefValue xtDRCLayDBFormat -value "Stream"
+    db::setPrefValue xtLVSTool          -value "IC Validator"
+    db::setPrefValue xtLVSICVRunsetFile -value "${DEVICELIB_PATH}/../../icv/FreePDK3_main.lvs.rs"
+    db::setPrefValue xtLVSICVIncludePaths -value "${DEVICELIB_PATH}/../../icv"
+    db::setPrefValue xtLVSLayDBFormat -value "Stream"
+    db::setPrefValue xtLPELVSTool          -value "IC Validator"
+    db::setPrefValue xtLPETool          -value "StarRC"
+    db::setPrefValue xtLPEOpenParasiticView -value false
+    db::setPrefValue xtStarTcadGrdFile   -value "${DEVICELIB_PATH}/../../starrc/FreePDK3_RCtyp.nxtgrd"
+    db::setPrefValue xtLPEStarOADeviceMappingFile -value "${DEVICELIB_PATH}/../../starrc/oa.device.map"
+    db::setPrefValue xtStarOALayerMappingFile -value "${DEVICELIB_PATH}/../../starrc/oa.layer.map"
+    db::setPrefValue saSimulator -value  "HSPICE"
+    db::setPrefValue saResultsDir -value  "./simulation"
+    db::setPrefValue saHSPICEEnvOptsIncludePath -value  "${DEVICELIB_PATH}/../../hspice/models/"
+    db::setPrefValue saHSPICEModelsIncludePath -value  "${DEVICELIB_PATH}/../../hspice/models/"
+    db::setPrefValue saHSPICEModelsFiles -value  [list [list fet.mod nfet_typ ] [list fet.mod pfet_typ ] ]
+    db::setPrefValue saFineSimProEnvOptsIncludePath -value  "${DEVICELIB_PATH}/../../hspice/models/"
+    db::setPrefValue saFineSimProModelsIncludePath -value  "${DEVICELIB_PATH}/../../hspice/models/"
+    db::setPrefValue saFineSimProModelsFiles -value  [list [list fet.mod nfet_typ ] [list fet.mod pfet_typ ] ]
+
+}
+
+puts "\t#######################################"
+puts "\tCC-PDK Library Name\t: FreePDK3"
+puts "\t#######################################\n"
+

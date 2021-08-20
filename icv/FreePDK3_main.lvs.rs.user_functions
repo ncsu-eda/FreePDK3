@@ -1,0 +1,102 @@
+// 3nm FreePDK(TM) ICV LVS Functions
+//
+// Copyright (c) 2021, North Carolina State University
+// All Rights Reserved.
+//
+// Please see the file LICENSE included with this distribution for license.
+// You may not use these files except in compliance with the License.
+
+
+#include <icv_compare.rh>
+#include <math.rh>
+#include <string.rh>
+
+
+default_par_mos_props : entrypoint function (void) returning void
+{
+    vDEV_ID = lvs_current_device();
+
+    vP_valid = lvs_sum_of_products(vDEV_ID, "W", "L", vP);
+    vQ_valid = lvs_sum_of_divisions(vDEV_ID, "W", "L", vQ);
+    if (vP_valid && vQ_valid) {
+        vW = sqrt(vP*vQ);
+        vL = sqrt(vP/vQ);
+        lvs_save_double_property("W", vW);
+        lvs_save_double_property("L", vL);
+    }
+
+    vAS_valid = lvs_sum(vDEV_ID, "AS", vAS);
+    if (vAS_valid) {
+        lvs_save_double_property("AS", vAS);
+    }
+
+    vAD_valid = lvs_sum(vDEV_ID, "AD", vAD);
+    if (vAD_valid) {
+        lvs_save_double_property("AD", vAD);
+    }
+
+    vPS_valid = lvs_sum(vDEV_ID, "PS", vPS);
+    if (vPS_valid) {
+        lvs_save_double_property("PS", vPS);
+    }
+
+    vPD_valid = lvs_sum(vDEV_ID, "PD", vPD);
+    if (vPD_valid) {
+        lvs_save_double_property("PD", vPD);
+    }
+}
+
+default_par_cap_props : entrypoint function (void) returning void
+{
+    vDEV_ID = lvs_current_device();
+
+    vP_valid = lvs_sum_of_products(vDEV_ID, "W", "L", vP);
+    vQ_valid = lvs_sum_of_divisions(vDEV_ID, "W", "L", vQ);
+    if (vP_valid && vQ_valid) {
+        vW = sqrt(vP*vQ);
+        vL = sqrt(vP/vQ);
+        lvs_save_double_property("W", vW);
+        lvs_save_double_property("L", vL);
+    }
+
+    vA_valid = lvs_sum(vDEV_ID, "A", vA);
+    if (vA_valid) {
+        lvs_save_double_property("A", vA);
+    }
+
+    vP_valid = lvs_sum(vDEV_ID, "P", vP);
+    if (vP_valid) {
+        lvs_save_double_property("P", vP);
+    }
+}
+
+default_par_wl_props : entrypoint function (void) returning void
+{
+    vDEV_ID = lvs_current_device();
+
+    vP_valid = lvs_sum_of_products(vDEV_ID, "W", "L", vP);
+    vQ_valid = lvs_sum_of_divisions(vDEV_ID, "W", "L", vQ);
+
+    if (vP_valid && vQ_valid) {
+        vW = sqrt(vP * vQ);
+        vL = sqrt(vP / vQ);
+        lvs_save_double_property("W", vW);
+        lvs_save_double_property("L", vL);
+    }
+}
+
+default_ser_wl_props : entrypoint function (void) returning void
+{
+    vDEV_ID = lvs_current_device();
+
+    vP_valid = lvs_sum_of_products(vDEV_ID, "L", "W", vP);
+    vQ_valid = lvs_sum_of_divisions(vDEV_ID, "L", "W", vQ);
+
+    if (vP_valid && vQ_valid) {
+        vW = sqrt(vP / vQ);
+        vL = sqrt(vP * vQ);
+        lvs_save_double_property("W", vW);
+        lvs_save_double_property("L", vL);
+    }
+}
+
